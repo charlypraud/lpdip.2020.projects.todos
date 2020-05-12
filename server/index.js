@@ -6,6 +6,16 @@ const app = express();
 const port = 3001;
 const api = require(`./apis/index.js`);
 
+const mysql = require("mysql2");
+const con = mysql.createConnection({
+     host: 'db',
+     user: 'root',
+     password: 'root',
+     database: 'Web',
+     //port: '3308'
+});
+
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
