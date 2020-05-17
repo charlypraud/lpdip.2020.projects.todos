@@ -1,0 +1,18 @@
+Base de données pour le projet
+
+Nom : Web
+
+Composée de deux tables :
+
+lists : 
+	- id : type int, taille 11, non null, auto incrémentation
+	- label : type varchar, taille 255, non null
+	- description : type varchar, taille 255, non null
+
+todos :
+	- id : type int, taille 11, non null, auto incrémentation
+	- label : type varchar, taille 255, non null
+	- idList : type int, taille 11, non null
+	- isDone : type booléen, taille 1, non null, valeur par défaut 0 (= false)
+
+Clé étrangère entre idList de la table todos et id de la table lists.
