@@ -1,23 +1,12 @@
 'use strict';
 
-const mysql = require("mysql2");
-const con = mysql.createConnection({
-     host: 'db',
-     user: 'root',
-     password: 'root',
-     database: 'Web',
-     //port: '3308'
-});
-
-
+const con = require ('./connexion');
 const express = require(`express`);
 const todosApi = express.Router();
 
 
 todosApi.get('/', async (req, res) => {
-  var result = [];
-  var object = {};
-  con.query('SELECT * FROM todos', function(err, rows, fields) {
+  con.bdd.query('SELECT * FROM todos', function(err, rows) {
       if (err) throw err;
         rows.forEach(e => {
           if (e.isDone == 0) {
@@ -27,34 +16,17 @@ todosApi.get('/', async (req, res) => {
           }
         });
         res.json(rows);
-        // for (var i = 0; i < rows.length; i++) {
-        //   let bool = rows[i].isDone;
-        //   if (bool == 0) {
-        //     bool = false;
-        //   }else{
-        //     bool = true;
-        //   }
-        //   object = {
-        //     id: rows[i].id,
-        //     label: rows[i].label,
-        //     idList: rows[i].idList,
-        //     isDone: bool
-        //   }
-        //   result.push(object);
-        // };
-        // return res.json(result);
       });
 });
 
 
 todosApi.post('/', function(req, res) {
-  let sql = 'INSERT INTO todos(label, idList, isDone) VALUES (?,?,?)';
+  let sql = 'INSERT INTO todos(label, idList) VALUES (?,?)';
   let datas = [
     req.body.label,
     req.body.idList,
-    false
   ];
-  con.query(sql, datas, function(err, row) {
+  con.bdd.query(sql, datas, function(err, row) {
       if (err) throw err;
       res.json({
         id: row.insertId,
@@ -72,7 +44,7 @@ todosApi.put('/:id', function(req, res) {
     req.body.isDone,
     req.params.id
   ];
-  con.query(sql, datas, function(err, row) {
+  con.bdd.query(sql, datas, function(err, row) {
     if (err) throw err;
     res.json({
       id: req.body.id,
@@ -86,7 +58,7 @@ todosApi.put('/:id', function(req, res) {
 
 todosApi.delete('/:id', function(req, res) {
   let id = req.params.id;
-  con.query('DELETE FROM todos WHERE id = ?',[id], function(err, rows) {
+  con.bdd.query('DELETE FROM todos WHERE id = ?',[id], function(err, rows) {
       if (err) throw err;
       res.json(rows);
     });

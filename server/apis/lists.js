@@ -1,21 +1,13 @@
 'use strict';
 
-const mysql = require("mysql2");
-const con = mysql.createConnection({
-     host: 'db',
-     user: 'root',
-     password: 'root',
-     database: 'Web',
-});
-
-
+const con = require('./connexion');
 const express = require(`express`);
 const listsApi = express.Router();
 
 listsApi.get(`/`, async (req, res) => {
-    con.query('SELECT * FROM lists', function(err, rows) {
+    con.bdd.query('SELECT * FROM lists', function(err, rows) {
         if (err) throw err;
-          res.json(rows);
+        res.json(rows);
         });
 });
 
@@ -26,7 +18,7 @@ listsApi.post('/', function(req, res) {
         req.body.label,
         req.body.description
     ];
-    con.query(sql, datas, function(err, row, fields) {
+    con.bdd.query(sql, datas, function(err, row, fields) {
         if (err) throw err;
         res.json({
             id: row.insertId,
@@ -43,7 +35,7 @@ listsApi.put('/:id', function(req, res) {
         req.body.description,
         req.params.id
     ];
-    con.query(sql, datas, function(err, row, fields) {
+    con.bdd.query(sql, datas, function(err, row, fields) {
         if (err) throw err;
         return res.json({
             id: req.body.id,
